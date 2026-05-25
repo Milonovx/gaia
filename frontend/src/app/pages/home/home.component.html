@@ -1,0 +1,109 @@
+<section class="hero-section">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <span class="eyebrow"><fa-icon icon="shield-heart"></fa-icon> Adopción responsable en Neiva</span>
+        <h1>GAIA conecta mascotas rescatadas con hogares listos para cuidar.</h1>
+        <p class="hero-copy">Explora mascotas disponibles, encuentra refugios cercanos y gestiona solicitudes de adopción desde una plataforma segura.</p>
+        <div class="d-flex flex-wrap gap-3">
+          <a class="btn btn-success btn-lg rounded-pill px-4" routerLink="/mascotas">
+            Ver mascotas <fa-icon icon="arrow-right"></fa-icon>
+          </a>
+          <a class="btn btn-outline-success btn-lg rounded-pill px-4" routerLink="/registro">Crear cuenta</a>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="hero-photo">
+          <img src="https://images.unsplash.com/photo-1601758124510-52d02ddb7cbd?auto=format&fit=crop&w=1200&q=80" alt="Mascotas listas para adopción">
+          <div class="hero-badge">
+            <strong>{{ stats.mascotasDisponibles }}</strong>
+            <span>mascotas disponibles</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stats-band">
+  <div class="container">
+    <div class="row g-3">
+      <div class="col-6 col-lg-3">
+        <div class="stat-card"><strong>{{ stats.totalMascotas }}</strong><span>Total mascotas</span></div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card"><strong>{{ stats.mascotasDisponibles }}</strong><span>Disponibles</span></div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card"><strong>{{ refugios.length || 3 }}</strong><span>Refugios aliados</span></div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card"><strong>Neiva</strong><span>Huila</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-pad">
+  <div class="container">
+    <div class="section-title">
+      <span>Mascotas destacadas</span>
+      <h2>Conoce a quienes esperan una familia</h2>
+    </div>
+
+    <app-loading-spinner *ngIf="loading"></app-loading-spinner>
+
+    <app-empty-state
+      *ngIf="!loading && !featuredPets.length"
+      title="No hay mascotas publicadas"
+      message="El catálogo aparecerá aquí cuando un administrador publique mascotas disponibles."
+      icon="dog">
+    </app-empty-state>
+
+    <div class="row g-4" *ngIf="!loading && featuredPets.length">
+      <div class="col-md-6 col-lg-4" *ngFor="let mascota of featuredPets">
+        <article class="pet-card">
+          <img [src]="mascota.imagenUrl || fallbackImage" [alt]="mascota.nombre">
+          <div class="pet-card-body">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <h3>{{ mascota.nombre }}</h3>
+                <p>{{ mascota.raza }} · {{ mascota.genero }}</p>
+              </div>
+              <span class="badge rounded-pill" [class.text-bg-success]="mascota.disponible" [class.text-bg-secondary]="!mascota.disponible">
+                {{ mascota.disponible ? 'Disponible' : 'No disponible' }}
+              </span>
+            </div>
+            <a class="btn btn-sm btn-outline-success rounded-pill mt-3" [routerLink]="['/mascotas', mascota.id]">Ver detalle</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="benefits-section">
+  <div class="container">
+    <div class="row g-4 align-items-center">
+      <div class="col-lg-5">
+        <div class="section-title text-start">
+          <span>Beneficios</span>
+          <h2>Adoptar tambien organiza el trabajo de los refugios</h2>
+        </div>
+      </div>
+      <div class="col-lg-7">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <div class="benefit-card"><fa-icon icon="heart"></fa-icon><h3>Adopción guiada</h3><p>Solicitudes claras y estados visibles.</p></div>
+          </div>
+          <div class="col-md-4">
+            <div class="benefit-card"><fa-icon icon="map-location-dot"></fa-icon><h3>Mapa de refugios</h3><p>Ubicacion de centros en Neiva.</p></div>
+          </div>
+          <div class="col-md-4">
+            <div class="benefit-card"><fa-icon icon="shield-heart"></fa-icon><h3>Gestión segura</h3><p>Acceso con roles y JWT.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

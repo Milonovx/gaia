@@ -1,0 +1,51 @@
+<section class="auth-page">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-7">
+        <div class="auth-card">
+          <span class="auth-icon"><fa-icon icon="user-plus"></fa-icon></span>
+          <h1>Crear cuenta</h1>
+          <p>Registra tus datos para iniciar solicitudes de adopción.</p>
+
+          <form [formGroup]="form" (ngSubmit)="submit()" class="row g-3 mt-3">
+            <div class="col-md-6">
+              <label class="form-label">Nombre</label>
+              <input class="form-control" formControlName="nombre">
+              <small class="text-danger" *ngIf="form.controls.nombre.touched && form.controls.nombre.invalid">Nombre requerido.</small>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Apellido</label>
+              <input class="form-control" formControlName="apellido">
+              <small class="text-danger" *ngIf="form.controls.apellido.touched && form.controls.apellido.invalid">Apellido requerido.</small>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" formControlName="email">
+              <small class="text-danger" *ngIf="form.controls.email.touched && form.controls.email.invalid">Email valido requerido.</small>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Teléfono</label>
+              <input class="form-control" formControlName="telefono">
+            </div>
+            <div class="col-12">
+              <label class="form-label">Password</label>
+              <input type="password" class="form-control" formControlName="password">
+              <small class="text-danger" *ngIf="form.controls.password.touched && form.controls.password.invalid">Mínimo 8 caracteres.</small>
+            </div>
+            <div class="col-12">
+              <button class="btn btn-success w-100 rounded-pill" type="submit" [disabled]="loading">
+                <span *ngIf="!loading">Registrarme</span>
+                <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
+              </button>
+            </div>
+          </form>
+
+          <div class="auth-footer">
+            <span>Ya tienes cuenta?</span>
+            <a routerLink="/login">Iniciar sesión</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

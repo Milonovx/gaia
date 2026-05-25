@@ -1,0 +1,28 @@
+<section class="page-hero compact">
+  <div class="container">
+    <span class="eyebrow"><fa-icon icon="map-location-dot"></fa-icon> Refugios</span>
+    <h1>Mapa de refugios en Neiva</h1>
+    <p>Ubica refugios aliados y consulta su información de contacto.</p>
+  </div>
+</section>
+
+<section class="section-pad pt-4">
+  <div class="container">
+    <div class="map-shell">
+      <div id="refugiosMap"></div>
+      <app-loading-spinner *ngIf="loading" label="Cargando refugios..."></app-loading-spinner>
+    </div>
+
+    <div class="row g-4 mt-2">
+      <div class="col-md-6 col-lg-4" *ngFor="let refugio of refugios">
+        <article class="shelter-card">
+          <span><fa-icon icon="location-dot"></fa-icon></span>
+          <h2>{{ refugio.nombre }}</h2>
+          <p>{{ refugio.direccion }}</p>
+          <p>{{ refugio.descripcion }}</p>
+          <strong>{{ refugio.telefono }}</strong>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,144 @@
+<section class="delivery-page">
+  <div class="delivery-bg"></div>
+
+  <div class="container delivery-wrap">
+    <div class="delivery-heading">
+      <span class="eyebrow"><fa-icon icon="paw"></fa-icon> Entregar Mascota</span>
+      <h1>Solicitud de ingreso</h1>
+      <p>Ingreso a refugio y publicación para adopción responsable.</p>
+    </div>
+
+    <form class="delivery-card" [formGroup]="form" (ngSubmit)="submit()">
+      <div class="form-grid">
+        <section class="form-panel">
+          <div class="panel-title">
+            <span>01</span>
+            <h2>Mascota</h2>
+          </div>
+
+          <div class="grid-two">
+            <label>
+              <span>Nombre mascota</span>
+              <input class="form-control" formControlName="nombreMascota" autocomplete="off">
+            </label>
+
+            <label>
+              <span>Raza</span>
+              <input class="form-control" formControlName="raza" autocomplete="off">
+            </label>
+
+            <label>
+              <span>Edad</span>
+              <input type="number" class="form-control" formControlName="edad" min="0">
+            </label>
+
+            <label>
+              <span>Unidad</span>
+              <select class="form-select" formControlName="tipoEdad">
+                <option value="MESES">Meses</option>
+                <option value="ANIOS">Años</option>
+              </select>
+            </label>
+
+            <label>
+              <span>Tamaño</span>
+              <select class="form-select" formControlName="tamano">
+                <option value="PEQUENO">Pequeño</option>
+                <option value="MEDIANO">Mediano</option>
+                <option value="GRANDE">Grande</option>
+              </select>
+            </label>
+
+            <label>
+              <span>Género</span>
+              <select class="form-select" formControlName="genero">
+                <option value="MACHO">Macho</option>
+                <option value="HEMBRA">Hembra</option>
+              </select>
+            </label>
+          </div>
+
+          <label>
+            <span>Descripción</span>
+            <textarea class="form-control" rows="4" formControlName="descripcion"></textarea>
+          </label>
+
+          <div class="grid-two">
+            <label>
+              <span>Estado de salud</span>
+              <input class="form-control" formControlName="estadoSalud" autocomplete="off">
+            </label>
+
+            <label>
+              <span>Refugio</span>
+              <select class="form-select" formControlName="refugioId">
+                <option [ngValue]="0">Seleccionar refugio</option>
+                <option *ngFor="let refugio of refugios" [ngValue]="refugio.id">{{ refugio.nombre }}</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="switch-row">
+            <label class="premium-switch">
+              <input type="checkbox" formControlName="vacunado">
+              <span></span>
+              Vacunado
+            </label>
+            <label class="premium-switch">
+              <input type="checkbox" formControlName="esterilizado">
+              <span></span>
+              Esterilizado
+            </label>
+          </div>
+        </section>
+
+        <aside class="image-panel">
+          <label class="image-drop" [class.has-image]="previewUrl">
+            <img *ngIf="previewUrl" [src]="previewUrl" alt="Imagen mascota">
+            <span class="image-empty" *ngIf="!previewUrl">
+              <fa-icon icon="plus"></fa-icon>
+              <strong>Subir imagen</strong>
+              <small>JPG, JPEG, PNG o WEBP · máximo 5MB</small>
+            </span>
+            <input type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" (change)="onFileSelected($event)">
+          </label>
+
+          <div class="progress premium-progress" *ngIf="submitting">
+            <div class="progress-bar" [style.width.%]="uploadProgress">{{ uploadProgress }}%</div>
+          </div>
+        </aside>
+
+        <section class="form-panel full">
+          <div class="panel-title">
+            <span>02</span>
+            <h2>Contacto</h2>
+          </div>
+
+          <div class="grid-two">
+            <label>
+              <span>Teléfono contacto</span>
+              <input class="form-control" formControlName="telefonoContacto" autocomplete="tel">
+            </label>
+
+            <label>
+              <span>Dirección</span>
+              <input class="form-control" formControlName="direccion" autocomplete="street-address">
+            </label>
+          </div>
+
+          <label>
+            <span>Motivo entrega</span>
+            <textarea class="form-control" rows="4" formControlName="motivoEntrega"></textarea>
+          </label>
+        </section>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-submit" type="submit" [disabled]="loading || submitting">
+          <span *ngIf="!submitting">Enviar solicitud</span>
+          <span *ngIf="submitting" class="spinner-border spinner-border-sm"></span>
+        </button>
+      </div>
+    </form>
+  </div>
+</section>

@@ -1,0 +1,267 @@
+<section class="page-hero compact">
+  <div class="container">
+    <span class="eyebrow"><fa-icon icon="chart-line"></fa-icon> Administración</span>
+    <h1>Dashboard GAIA</h1>
+    <p>Gestión profesional de mascotas, refugios, usuarios y solicitudes.</p>
+  </div>
+</section>
+
+<section class="section-pad pt-4">
+  <div class="container">
+    <app-loading-spinner *ngIf="loading"></app-loading-spinner>
+
+    <div class="admin-shell" *ngIf="!loading">
+      <aside class="admin-sidebar">
+        <button class="side-link" [class.active]="activeTab === 'mascotas'" (click)="setTab('mascotas')"><fa-icon icon="dog"></fa-icon>Mascotas</button>
+        <button class="side-link" [class.active]="activeTab === 'usuarios'" (click)="setTab('usuarios')"><fa-icon icon="user"></fa-icon>Usuarios</button>
+        <button class="side-link" [class.active]="activeTab === 'refugios'" (click)="setTab('refugios')"><fa-icon icon="location-dot"></fa-icon>Refugios</button>
+        <button class="side-link" [class.active]="activeTab === 'solicitudes'" (click)="setTab('solicitudes')"><fa-icon icon="heart"></fa-icon>Adopciones</button>
+        <button class="side-link" [class.active]="activeTab === 'ingresos'" (click)="setTab('ingresos')"><fa-icon icon="paw"></fa-icon>Ingresos</button>
+      </aside>
+
+      <main class="admin-content">
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-xl">
+            <div class="admin-stat"><fa-icon icon="dog"></fa-icon><strong>{{ stats.totalMascotas }}</strong><span>Total mascotas</span></div>
+          </div>
+          <div class="col-6 col-xl">
+            <div class="admin-stat"><fa-icon icon="user"></fa-icon><strong>{{ stats.totalUsuarios }}</strong><span>Total usuarios</span></div>
+          </div>
+          <div class="col-6 col-xl">
+            <div class="admin-stat"><fa-icon icon="clock"></fa-icon><strong>{{ stats.solicitudesPendientes }}</strong><span>Pendientes</span></div>
+          </div>
+          <div class="col-6 col-xl">
+            <div class="admin-stat"><fa-icon icon="check"></fa-icon><strong>{{ stats.mascotasDisponibles }}</strong><span>Disponibles</span></div>
+          </div>
+          <div class="col-6 col-xl">
+            <div class="admin-stat"><fa-icon icon="bell"></fa-icon><strong>{{ stats.solicitudesIngresoPendientes }}</strong><span>Ingresos</span></div>
+          </div>
+        </div>
+
+        <div class="admin-toolbar">
+          <div class="input-group">
+            <span class="input-group-text"><fa-icon icon="search"></fa-icon></span>
+            <input class="form-control" [value]="adminSearch" (input)="updateSearch($any($event.target).value)" placeholder="Buscar">
+          </div>
+          <span>{{ activeTotal }} registros</span>
+        </div>
+
+        <div class="row g-4" *ngIf="activeTab === 'mascotas'">
+          <div class="col-xl-4">
+            <form class="admin-panel" [formGroup]="mascotaForm" (ngSubmit)="saveMascota()">
+              <h2>{{ editingMascotaId ? 'Editar mascota' : 'Crear mascota' }}</h2>
+              <input class="form-control mb-2" placeholder="Nombre" formControlName="nombre">
+              <div class="row g-2">
+                <div class="col-6"><input type="number" class="form-control mb-2" placeholder="Edad" formControlName="edad"></div>
+                <div class="col-6">
+                  <select class="form-select mb-2" formControlName="tipoEdad">
+                    <option value="MESES">Meses</option>
+                    <option value="ANIOS">Años</option>
+                  </select>
+                </div>
+              </div>
+              <input class="form-control mb-2" placeholder="Raza" formControlName="raza">
+              <div class="row g-2">
+                <div class="col-6">
+                  <select class="form-select mb-2" formControlName="tamano">
+                    <option value="PEQUENO">Pequeño</option>
+                    <option value="MEDIANO">Mediano</option>
+                    <option value="GRANDE">Grande</option>
+                  </select>
+                </div>
+                <div class="col-6">
+                  <select class="form-select mb-2" formControlName="genero">
+                    <option value="MACHO">Macho</option>
+                    <option value="HEMBRA">Hembra</option>
+                  </select>
+                </div>
+              </div>
+              <input class="form-control mb-2" placeholder="Estado de salud" formControlName="estadoSalud">
+              <textarea class="form-control mb-2" placeholder="Descripción" formControlName="descripcion"></textarea>
+              <div class="admin-upload mb-2">
+                <img *ngIf="mascotaPreviewUrl" [src]="mascotaPreviewUrl" alt="Preview mascota">
+                <div class="upload-placeholder" *ngIf="!mascotaPreviewUrl">Imagen mascota</div>
+                <input type="file" class="form-control mt-2" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" (change)="onMascotaImageSelected($event)">
+                <div class="progress mt-2" *ngIf="uploadingMascotaImage">
+                  <div class="progress-bar bg-success" [style.width.%]="uploadProgress">{{ uploadProgress }}%</div>
+                </div>
+                <small class="upload-status" *ngIf="mascotaForm.controls.imagenUrl.value && !uploadingMascotaImage">Imagen cargada correctamente</small>
+              </div>
+              <input type="date" class="form-control mb-2" formControlName="fechaRescate">
+              <select class="form-select mb-3" formControlName="refugioId">
+                <option [ngValue]="0">Seleccione refugio</option>
+                <option *ngFor="let refugio of refugios" [ngValue]="refugio.id">{{ refugio.nombre }}</option>
+              </select>
+              <div class="form-check form-switch mb-2">
+                <input class="form-check-input" type="checkbox" formControlName="vacunado">
+                <label class="form-check-label">Vacunado</label>
+              </div>
+              <div class="form-check form-switch mb-2">
+                <input class="form-check-input" type="checkbox" formControlName="esterilizado">
+                <label class="form-check-label">Esterilizado</label>
+              </div>
+              <div class="form-check form-switch mb-3">
+                <input class="form-check-input" type="checkbox" formControlName="disponible">
+                <label class="form-check-label">Disponible</label>
+              </div>
+              <button class="btn btn-success rounded-pill w-100" [disabled]="savingMascota || uploadingMascotaImage">{{ editingMascotaId ? 'Actualizar' : 'Crear' }}</button>
+              <button type="button" class="btn btn-outline-secondary rounded-pill w-100 mt-2" (click)="resetMascotaForm()">Limpiar</button>
+            </form>
+          </div>
+
+          <div class="col-xl-8">
+            <div class="admin-table">
+              <app-empty-state *ngIf="!filteredMascotas.length" title="Sin mascotas" message="Crea la primera mascota para publicarla en adopción."></app-empty-state>
+              <div class="table-responsive">
+                <table class="table align-middle" *ngIf="filteredMascotas.length">
+                  <thead><tr><th>Nombre</th><th>Edad</th><th>Raza</th><th>Refugio</th><th>Estado</th><th></th></tr></thead>
+                  <tbody>
+                    <tr *ngFor="let mascota of paged(filteredMascotas)">
+                      <td><strong>{{ mascota.nombre }}</strong></td>
+                      <td>{{ mascota | edadMascota }}</td>
+                      <td>{{ mascota.raza }}</td>
+                      <td>{{ mascota.refugio.nombre }}</td>
+                      <td><span class="badge" [class.text-bg-success]="mascota.disponible" [class.text-bg-secondary]="!mascota.disponible">{{ mascota.disponible ? 'Disponible' : 'No disponible' }}</span></td>
+                      <td class="text-end">
+                        <button class="btn btn-sm btn-outline-success me-2" (click)="editMascota(mascota)"><fa-icon icon="pen-to-square"></fa-icon></button>
+                        <button class="btn btn-sm btn-outline-danger" (click)="deleteMascota(mascota.id)"><fa-icon icon="trash"></fa-icon></button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-4" *ngIf="activeTab === 'refugios'">
+          <div class="col-xl-4">
+            <form class="admin-panel" [formGroup]="refugioForm" (ngSubmit)="saveRefugio()">
+              <h2>{{ editingRefugioId ? 'Editar refugio' : 'Crear refugio' }}</h2>
+              <input class="form-control mb-2" placeholder="Nombre" formControlName="nombre">
+              <input class="form-control mb-2" placeholder="Dirección" formControlName="direccion">
+              <input class="form-control mb-2" placeholder="Teléfono" formControlName="telefono">
+              <textarea class="form-control mb-2" placeholder="Descripción" formControlName="descripcion"></textarea>
+              <div class="row g-2">
+                <div class="col-6"><input type="number" step="0.0001" class="form-control mb-2" placeholder="Latitud" formControlName="latitud"></div>
+                <div class="col-6"><input type="number" step="0.0001" class="form-control mb-2" placeholder="Longitud" formControlName="longitud"></div>
+              </div>
+              <input class="form-control mb-3" placeholder="Ciudad" formControlName="ciudad">
+              <button class="btn btn-success rounded-pill w-100" [disabled]="savingRefugio">{{ editingRefugioId ? 'Actualizar' : 'Crear' }}</button>
+              <button type="button" class="btn btn-outline-secondary rounded-pill w-100 mt-2" (click)="resetRefugioForm()">Limpiar</button>
+            </form>
+          </div>
+          <div class="col-xl-8">
+            <div class="admin-table">
+              <app-empty-state *ngIf="!filteredRefugios.length" title="Sin refugios" message="Crea un refugio para asociar mascotas y solicitudes."></app-empty-state>
+              <table class="table align-middle" *ngIf="filteredRefugios.length">
+                <thead><tr><th>Nombre</th><th>Dirección</th><th>Ciudad</th><th></th></tr></thead>
+                <tbody>
+                  <tr *ngFor="let refugio of paged(filteredRefugios)">
+                    <td><strong>{{ refugio.nombre }}</strong></td>
+                    <td>{{ refugio.direccion }}</td>
+                    <td>{{ refugio.ciudad }}</td>
+                    <td class="text-end">
+                      <button class="btn btn-sm btn-outline-success me-2" (click)="editRefugio(refugio)"><fa-icon icon="pen-to-square"></fa-icon></button>
+                      <button class="btn btn-sm btn-outline-danger" (click)="deleteRefugio(refugio.id)"><fa-icon icon="trash"></fa-icon></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-table" *ngIf="activeTab === 'solicitudes'">
+          <app-empty-state *ngIf="!filteredSolicitudes.length" title="Sin solicitudes" message="No hay solicitudes registradas."></app-empty-state>
+          <div class="table-responsive" *ngIf="filteredSolicitudes.length">
+            <table class="table align-middle">
+              <thead><tr><th>Mascota</th><th>Usuario</th><th>Mensaje</th><th>Estado</th><th></th></tr></thead>
+              <tbody>
+                <tr *ngFor="let solicitud of paged(filteredSolicitudes)">
+                  <td><strong>{{ solicitud.mascota.nombre }}</strong><span class="d-block text-muted">{{ solicitud.mascota | edadMascota }}</span></td>
+                  <td>{{ solicitud.usuario.nombre }} {{ solicitud.usuario.apellido }}</td>
+                  <td>{{ solicitud.mensaje }}</td>
+                  <td><span class="request-status" [ngClass]="solicitud.estado.toLowerCase()">{{ solicitud.estado | estadoSolicitud }}</span></td>
+                  <td class="text-end">
+                    <button class="btn btn-sm btn-outline-success me-2" (click)="updateSolicitud(solicitud.id, 'APROBADA')" [disabled]="solicitud.estado === 'APROBADA'">Aprobar</button>
+                    <button class="btn btn-sm btn-outline-danger me-2" (click)="updateSolicitud(solicitud.id, 'RECHAZADA')" [disabled]="solicitud.estado === 'RECHAZADA'">Rechazar</button>
+                    <button class="btn btn-sm btn-outline-secondary" (click)="deleteSolicitud(solicitud.id)"><fa-icon icon="trash"></fa-icon></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="admin-table" *ngIf="activeTab === 'ingresos'">
+          <app-empty-state *ngIf="!filteredIngresos.length" title="Sin solicitudes de ingreso" message="No hay mascotas enviadas por usuarios."></app-empty-state>
+          <div class="table-responsive" *ngIf="filteredIngresos.length">
+            <table class="table align-middle">
+              <thead><tr><th>Imagen</th><th>Mascota</th><th>Usuario</th><th>Contacto</th><th>Motivo</th><th>Estado</th><th></th></tr></thead>
+              <tbody>
+                <tr *ngFor="let solicitud of paged(filteredIngresos)">
+                  <td><img class="thumb" *ngIf="solicitud.imagenUrl" [src]="solicitud.imagenUrl" [alt]="solicitud.nombreMascota"></td>
+                  <td><strong>{{ solicitud.nombreMascota }}</strong><span class="d-block text-muted">{{ solicitud.raza }} · {{ solicitud | edadMascota }} · {{ labelTamano(solicitud.tamano) }} · {{ labelGenero(solicitud.genero) }} · {{ solicitud.refugioNombre }}</span></td>
+                  <td>{{ solicitud.usuario.nombre }} {{ solicitud.usuario.apellido }}</td>
+                  <td><span class="d-block">{{ solicitud.telefonoContacto }}</span><span class="d-block text-muted">{{ solicitud.direccion }}</span></td>
+                  <td>{{ solicitud.motivoEntrega }}</td>
+                  <td><span class="request-status" [ngClass]="solicitud.estadoSolicitud.toLowerCase()">{{ solicitud.estadoSolicitud | estadoSolicitud }}</span></td>
+                  <td class="text-end">
+                    <button class="btn btn-sm btn-outline-success me-2" (click)="updateIngreso(solicitud, 'APROBADA')" [disabled]="solicitud.estadoSolicitud === 'APROBADA'">Aprobar</button>
+                    <button class="btn btn-sm btn-outline-danger me-2" (click)="updateIngreso(solicitud, 'RECHAZADA')" [disabled]="solicitud.estadoSolicitud === 'RECHAZADA'">Rechazar</button>
+                    <button class="btn btn-sm btn-outline-secondary" (click)="deleteIngreso(solicitud.id)"><fa-icon icon="trash"></fa-icon></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="admin-table" *ngIf="activeTab === 'usuarios'">
+          <app-empty-state *ngIf="!filteredUsuarios.length" title="Sin usuarios" message="No hay usuarios registrados."></app-empty-state>
+          <div class="table-responsive" *ngIf="filteredUsuarios.length">
+            <table class="table align-middle">
+              <thead><tr><th>Usuario</th><th>Email</th><th>Teléfono</th><th>Rol</th><th>Registro</th><th></th></tr></thead>
+              <tbody>
+                <tr *ngFor="let usuario of paged(filteredUsuarios)">
+                  <td><strong>{{ usuario.nombre }} {{ usuario.apellido }}</strong></td>
+                  <td>{{ usuario.email }}</td>
+                  <td>{{ usuario.telefono || 'Sin teléfono' }}</td>
+                  <td>
+                    <select class="form-select form-select-sm role-select" [value]="usuario.role" (change)="updateUserRole(usuario, $any($event.target).value)">
+                      <option value="ROLE_USER">Usuario</option>
+                      <option value="ROLE_ADMIN">Admin</option>
+                    </select>
+                  </td>
+                  <td>{{ usuario.fechaCreacion | date:'mediumDate' }}</td>
+                  <td class="text-end">
+                    <button class="btn btn-sm btn-outline-danger" (click)="deleteUser(usuario)" [disabled]="usuario.id === auth.user?.id || usuario.role === 'ROLE_ADMIN'"><fa-icon icon="trash"></fa-icon></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <nav class="admin-pagination" *ngIf="activeTotal > pageSize">
+          <button class="btn btn-outline-success rounded-pill" (click)="goToPage(page - 1)" [disabled]="page === 1">Anterior</button>
+          <span>Página {{ page }} de {{ totalPages }}</span>
+          <button class="btn btn-outline-success rounded-pill" (click)="goToPage(page + 1)" [disabled]="page === totalPages">Siguiente</button>
+        </nav>
+      </main>
+    </div>
+  </div>
+</section>
+
+<div class="confirm-backdrop" *ngIf="confirmDialog">
+  <div class="confirm-modal">
+    <span class="confirm-icon" [class.danger]="confirmDialog.danger"><fa-icon icon="trash"></fa-icon></span>
+    <h2>{{ confirmDialog.title }}</h2>
+    <p>{{ confirmDialog.message }}</p>
+    <div class="confirm-actions">
+      <button class="btn btn-outline-secondary rounded-pill px-4" type="button" (click)="cancelConfirm()">Cancelar</button>
+      <button class="btn rounded-pill px-4" [class.btn-danger]="confirmDialog.danger" [class.btn-success]="!confirmDialog.danger" type="button" (click)="confirmAction()">{{ confirmDialog.confirmLabel }}</button>
+    </div>
+  </div>
+</div>

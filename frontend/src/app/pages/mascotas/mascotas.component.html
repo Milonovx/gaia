@@ -1,0 +1,100 @@
+<section class="page-hero compact">
+  <div class="container">
+    <span class="eyebrow"><fa-icon icon="dog"></fa-icon> Mascotas</span>
+    <h1>Mascotas disponibles para adopción</h1>
+    <p>Filtra por raza, tamaño, género y disponibilidad.</p>
+  </div>
+</section>
+
+<section class="section-pad pt-4">
+  <div class="container">
+    <form [formGroup]="filterForm" class="filter-panel">
+      <div class="row g-3 align-items-end">
+        <div class="col-lg-4">
+          <label class="form-label">Buscar</label>
+          <div class="input-group">
+            <span class="input-group-text"><fa-icon icon="search"></fa-icon></span>
+            <input class="form-control" formControlName="search" placeholder="Nombre, raza, refugio">
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-2">
+          <label class="form-label">Raza</label>
+          <input class="form-control" formControlName="raza" placeholder="Mestizo">
+        </div>
+        <div class="col-sm-6 col-lg-2">
+          <label class="form-label">Tamaño</label>
+          <select class="form-select" formControlName="tamano">
+            <option value="">Todos</option>
+            <option value="PEQUENO">Pequeño</option>
+            <option value="MEDIANO">Mediano</option>
+            <option value="GRANDE">Grande</option>
+          </select>
+        </div>
+        <div class="col-sm-6 col-lg-2">
+          <label class="form-label">Género</label>
+          <select class="form-select" formControlName="genero">
+            <option value="">Todos</option>
+            <option value="MACHO">Macho</option>
+            <option value="HEMBRA">Hembra</option>
+          </select>
+        </div>
+        <div class="col-sm-6 col-lg-2">
+          <label class="form-label">Disponibilidad</label>
+          <select class="form-select" formControlName="disponible" (change)="applyFilters()">
+            <option value="">Todas</option>
+            <option value="true">Disponible</option>
+            <option value="false">No disponible</option>
+          </select>
+        </div>
+        <div class="col-12 d-flex gap-2">
+          <button type="button" class="btn btn-success rounded-pill px-4" (click)="applyFilters()">Aplicar filtros</button>
+          <button type="button" class="btn btn-outline-secondary rounded-pill px-4" (click)="clearFilters()">Limpiar</button>
+        </div>
+      </div>
+    </form>
+
+    <div class="row g-4" *ngIf="loading">
+      <div class="col-md-6 col-xl-4" *ngFor="let item of [1,2,3,4,5,6]">
+        <app-skeleton-card></app-skeleton-card>
+      </div>
+    </div>
+
+    <app-empty-state
+      *ngIf="!loading && !filteredMascotas.length"
+      title="No hay mascotas"
+      message="Ajusta los filtros para encontrar más resultados."
+      icon="dog">
+    </app-empty-state>
+
+    <div class="row g-4" *ngIf="!loading && filteredMascotas.length">
+      <div class="col-md-6 col-xl-4" *ngFor="let mascota of paginatedMascotas">
+        <article class="pet-card">
+          <img [src]="mascota.imagenUrl || fallbackImage" [alt]="mascota.nombre">
+          <div class="pet-card-body">
+            <div class="d-flex justify-content-between gap-3">
+              <div>
+                <h2>{{ mascota.nombre }}</h2>
+                <p>{{ mascota.raza }} · {{ mascota | edadMascota }}</p>
+              </div>
+              <span class="status-pill" [class.available]="mascota.disponible">{{ mascota.disponible ? 'Disponible' : 'No disponible' }}</span>
+            </div>
+            <div class="meta-grid">
+              <span>{{ labelTamano(mascota.tamano) }}</span>
+              <span>{{ labelGenero(mascota.genero) }}</span>
+              <span>{{ mascota.estadoSalud }}</span>
+            </div>
+            <a class="btn btn-outline-success w-100 rounded-pill mt-3" [routerLink]="['/mascotas', mascota.id]">
+              Ver detalle
+            </a>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <nav class="pagination-wrap" *ngIf="!loading && totalPages > 1">
+      <button class="btn btn-outline-success rounded-pill" (click)="goToPage(page - 1)" [disabled]="page === 1">Anterior</button>
+      <span>Página {{ page }} de {{ totalPages }}</span>
+      <button class="btn btn-outline-success rounded-pill" (click)="goToPage(page + 1)" [disabled]="page === totalPages">Siguiente</button>
+    </nav>
+  </div>
+</section>

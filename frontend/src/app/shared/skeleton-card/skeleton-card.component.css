@@ -1,0 +1,38 @@
+.skeleton-card {
+  background: #fff;
+  border: 1px solid rgba(25, 135, 84, 0.1);
+  border-radius: 18px;
+  box-shadow: var(--gaia-shadow);
+  overflow: hidden;
+}
+
+.skeleton {
+  animation: pulse 1.4s ease-in-out infinite;
+  background: linear-gradient(90deg, #eef4f0 25%, #f7faf8 50%, #eef4f0 75%);
+  background-size: 200% 100%;
+  border-radius: 12px;
+}
+
+.skeleton-image {
+  aspect-ratio: 16 / 11;
+  border-radius: 0;
+}
+
+.skeleton-line {
+  height: 16px;
+  margin-bottom: 12px;
+}
+
+.skeleton-button {
+  height: 36px;
+  margin-top: 18px;
+}
+
+@keyframes pulse {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

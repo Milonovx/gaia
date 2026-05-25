@@ -1,0 +1,34 @@
+<section class="page-hero compact">
+  <div class="container">
+    <span class="eyebrow"><fa-icon icon="heart"></fa-icon> Adopciones</span>
+    <h1>Mis solicitudes</h1>
+    <p>Consulta el estado de tus procesos de adopción.</p>
+  </div>
+</section>
+
+<section class="section-pad pt-4">
+  <div class="container">
+    <app-loading-spinner *ngIf="loading"></app-loading-spinner>
+
+    <app-empty-state
+      *ngIf="!loading && !solicitudes.length"
+      title="Aun no tienes solicitudes"
+      message="Explora mascotas disponibles e inicia una solicitud."
+      icon="heart">
+    </app-empty-state>
+
+    <div class="requests-list" *ngIf="!loading && solicitudes.length">
+      <article class="request-card" *ngFor="let solicitud of solicitudes">
+        <div>
+          <h2>{{ solicitud.mascota.nombre }}</h2>
+          <small>{{ solicitud.mascota.raza }} · {{ solicitud.mascota | edadMascota }}</small>
+          <p>{{ solicitud.mensaje }}</p>
+          <a [routerLink]="['/mascotas', solicitud.mascota.id]">Ver mascota</a>
+        </div>
+        <span class="request-status" [ngClass]="solicitud.estado.toLowerCase()">
+          {{ solicitud.estado | estadoSolicitud }}
+        </span>
+      </article>
+    </div>
+  </div>
+</section>

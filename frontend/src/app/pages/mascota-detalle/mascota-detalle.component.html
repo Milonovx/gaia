@@ -1,0 +1,49 @@
+<section class="section-pad detail-page">
+  <div class="container">
+    <app-loading-spinner *ngIf="loading"></app-loading-spinner>
+
+    <div class="row g-4" *ngIf="!loading && mascota">
+      <div class="col-lg-7">
+        <div class="detail-image">
+          <img [src]="mascota.imagenUrl || fallbackImage" [alt]="mascota.nombre">
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="detail-card">
+          <span class="status-pill" [class.available]="mascota.disponible">{{ mascota.disponible ? 'Disponible' : 'No disponible' }}</span>
+          <h1>{{ mascota.nombre }}</h1>
+          <p class="lead">{{ mascota.descripcion || 'Mascota rescatada lista para una familia responsable.' }}</p>
+
+          <div class="info-list">
+            <div><strong>Edad</strong><span>{{ mascota | edadMascota }}</span></div>
+            <div><strong>Raza</strong><span>{{ mascota.raza }}</span></div>
+            <div><strong>Tamaño</strong><span>{{ labelTamano(mascota.tamano) }}</span></div>
+            <div><strong>Género</strong><span>{{ labelGenero(mascota.genero) }}</span></div>
+            <div><strong>Estado de salud</strong><span>{{ mascota.estadoSalud }}</span></div>
+            <div><strong>Vacunado</strong><span>{{ mascota.vacunado ? 'Sí' : 'No' }}</span></div>
+            <div><strong>Esterilizado</strong><span>{{ mascota.esterilizado ? 'Sí' : 'No' }}</span></div>
+          </div>
+
+          <div class="refugio-box">
+            <fa-icon icon="location-dot"></fa-icon>
+            <div>
+              <strong>{{ mascota.refugio.nombre }}</strong>
+              <span>{{ mascota.refugio.direccion }}</span>
+            </div>
+          </div>
+
+          <form *ngIf="!auth.isAdmin()" [formGroup]="form" (ngSubmit)="solicitarAdopcion()" class="mt-4">
+            <label class="form-label">Mensaje de solicitud</label>
+            <textarea class="form-control" rows="4" formControlName="mensaje"></textarea>
+            <small class="text-danger" *ngIf="form.controls.mensaje.touched && form.controls.mensaje.invalid">Mínimo 10 caracteres.</small>
+            <button class="btn btn-success w-100 rounded-pill mt-3" [disabled]="submitting || !mascota.disponible">
+              <span *ngIf="!submitting">Solicitar adopción</span>
+              <span *ngIf="submitting" class="spinner-border spinner-border-sm"></span>
+            </button>
+          </form>
+          <a *ngIf="auth.isAdmin()" class="btn btn-success w-100 rounded-pill mt-4" routerLink="/admin">Administrar mascotas</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

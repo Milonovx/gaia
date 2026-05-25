@@ -1,0 +1,50 @@
+.gaia-navbar {
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom: 1px solid rgba(25, 135, 84, 0.1);
+  box-shadow: 0 10px 30px rgba(18, 65, 43, 0.08);
+  backdrop-filter: blur(16px);
+}
+
+.navbar-brand {
+  color: var(--gaia-green-900);
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.brand-mark {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  color: #fff;
+  background: var(--gaia-green-600);
+  border-radius: 10px;
+}
+
+.nav-link {
+  color: var(--gaia-slate-700);
+  font-weight: 600;
+  border-radius: 999px;
+  padding-inline: 0.9rem !important;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: var(--gaia-green-700);
+  background: rgba(25, 135, 84, 0.08);
+}
+
+.admin-link {
+  color: var(--gaia-green-800);
+}
+
+.user-name {
+  display: inline-block;
+  font-weight: 800;
+  margin-left: 0.25rem;
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+  white-space: nowrap;
+}

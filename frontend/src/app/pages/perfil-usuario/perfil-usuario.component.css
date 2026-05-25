@@ -1,0 +1,172 @@
+.profile-card {
+  align-items: center;
+  background: #fff;
+  border: 1px solid rgba(25, 135, 84, 0.12);
+  border-radius: 22px;
+  box-shadow: var(--gaia-shadow);
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: auto 1fr auto;
+  padding: 1.5rem;
+}
+
+.profile-avatar {
+  align-items: center;
+  background: var(--gaia-green-600);
+  border-radius: 20px;
+  color: #fff;
+  display: flex;
+  font-size: 1.5rem;
+  font-weight: 900;
+  height: 76px;
+  justify-content: center;
+  width: 76px;
+}
+
+.profile-photo {
+  border-radius: 20px;
+  height: 76px;
+  object-fit: cover;
+  width: 76px;
+}
+
+h2 {
+  color: var(--gaia-green-900);
+  font-weight: 900;
+  margin-bottom: 0.25rem;
+}
+
+p {
+  color: var(--gaia-slate-600);
+  margin-bottom: 0.6rem;
+}
+
+.role-pill {
+  background: #ddf7e8;
+  border-radius: 999px;
+  color: var(--gaia-green-800);
+  font-weight: 900;
+  padding: 0.4rem 0.75rem;
+}
+
+.profile-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.profile-edit {
+  background: #fff;
+  border: 1px solid rgba(25, 135, 84, 0.12);
+  border-radius: 18px;
+  box-shadow: var(--gaia-shadow);
+  padding: 1.25rem;
+}
+
+.profile-upload-preview {
+  align-items: center;
+  background: #f6faf7;
+  border: 1px solid rgba(25, 135, 84, 0.12);
+  border-radius: 14px;
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  padding: 0.65rem;
+}
+
+.profile-upload-preview img {
+  border-radius: 12px;
+  height: 58px;
+  object-fit: cover;
+  width: 58px;
+}
+
+.profile-upload-preview span,
+.upload-ok {
+  color: var(--gaia-green-700);
+  font-weight: 800;
+}
+
+.upload-ok {
+  display: block;
+  margin-top: 0.5rem;
+}
+
+.profile-section {
+  background: #fff;
+  border: 1px solid rgba(25, 135, 84, 0.12);
+  border-radius: 18px;
+  box-shadow: var(--gaia-shadow);
+  height: 100%;
+  padding: 1.25rem;
+}
+
+.profile-section h3 {
+  color: var(--gaia-green-900);
+  font-size: 1.2rem;
+  font-weight: 900;
+  margin-bottom: 1rem;
+}
+
+.profile-item {
+  align-items: center;
+  border-bottom: 1px solid rgba(25, 135, 84, 0.1);
+  display: flex;
+  gap: 0.9rem;
+  justify-content: space-between;
+  padding: 0.85rem 0;
+}
+
+.profile-item:last-child {
+  border-bottom: 0;
+}
+
+.profile-item strong,
+.profile-item span {
+  display: block;
+}
+
+.profile-item span,
+.empty-mini {
+  color: var(--gaia-slate-600);
+}
+
+.profile-item img {
+  border-radius: 10px;
+  height: 52px;
+  object-fit: cover;
+  width: 64px;
+}
+
+.profile-item em {
+  border-radius: 999px;
+  font-style: normal;
+  font-weight: 900;
+  padding: 0.35rem 0.7rem;
+  white-space: nowrap;
+}
+
+.pendiente {
+  background: #fff3cd;
+  color: #8a6200;
+}
+
+.aprobada {
+  background: #ddf7e8;
+  color: var(--gaia-green-800);
+}
+
+.rechazada {
+  background: #fde2e2;
+  color: #9c1c1c;
+}
+
+@media (max-width: 768px) {
+  .profile-card {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-actions {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,122 @@
+.gaia-footer {
+  background:
+    radial-gradient(circle at 20% 10%, rgba(38, 166, 91, 0.18), transparent 34%),
+    linear-gradient(180deg, #f7faf8 0%, #eef7f1 100%);
+  padding: 4rem 0 2rem;
+}
+
+.footer-glass {
+  background: rgba(10, 27, 19, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 28px;
+  box-shadow: 0 30px 90px rgba(15, 61, 43, 0.18);
+  color: #fff;
+  overflow: hidden;
+  padding: clamp(1.5rem, 4vw, 2.4rem);
+  position: relative;
+}
+
+.footer-glass::before {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), transparent 45%);
+  content: "";
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.footer-brand {
+  align-items: center;
+  display: flex;
+  gap: 0.7rem;
+  margin-bottom: 1rem;
+}
+
+.footer-brand strong {
+  font-size: 1.35rem;
+  letter-spacing: 0.08em;
+}
+
+.footer-mark {
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 14px;
+  color: var(--gaia-green-800);
+  display: grid;
+  height: 42px;
+  place-items: center;
+  width: 42px;
+}
+
+.gaia-footer p {
+  color: rgba(255, 255, 255, 0.68);
+  margin-bottom: 0.75rem;
+}
+
+.gaia-footer p span {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.gaia-footer h6 {
+  color: #fff;
+  font-weight: 900;
+  margin-bottom: 0.9rem;
+}
+
+.gaia-footer a {
+  color: rgba(255, 255, 255, 0.68);
+  display: block;
+  font-weight: 700;
+  margin-bottom: 0.55rem;
+  text-decoration: none;
+}
+
+.gaia-footer a:hover {
+  color: #fff;
+  transform: translateX(4px);
+}
+
+.social-row {
+  display: flex;
+  gap: 0.65rem;
+  margin-top: 1.25rem;
+}
+
+.social-row a {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  display: flex;
+  height: 38px;
+  justify-content: center;
+  margin: 0;
+  width: 38px;
+}
+
+.social-row a:hover {
+  background: rgba(255, 255, 255, 0.16);
+  transform: translateY(-2px);
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.56);
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  margin-top: 2rem;
+  padding-top: 1.2rem;
+}
+
+@media (max-width: 576px) {
+  .gaia-footer {
+    padding: 2.5rem 0 1.5rem;
+  }
+
+  .footer-glass {
+    border-radius: 22px;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+  }
+}

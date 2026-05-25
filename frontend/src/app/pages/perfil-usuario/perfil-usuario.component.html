@@ -1,0 +1,100 @@
+<section class="page-hero compact">
+  <div class="container">
+    <span class="eyebrow"><fa-icon icon="user"></fa-icon> Perfil</span>
+    <h1>Mi cuenta</h1>
+    <p>Información de sesión y rol dentro de GAIA.</p>
+  </div>
+</section>
+
+<section class="section-pad pt-4">
+  <div class="container">
+    <div class="profile-card" *ngIf="user">
+      <img class="profile-photo" *ngIf="user.fotoPerfil" [src]="user.fotoPerfil" [alt]="user.nombre">
+      <div class="profile-avatar" *ngIf="!user.fotoPerfil">
+        {{ user.nombre.charAt(0) }}{{ user.apellido.charAt(0) }}
+      </div>
+      <div>
+        <h2>{{ user.nombre }} {{ user.apellido }}</h2>
+        <p>{{ user.email }}</p>
+        <p *ngIf="user.telefono">{{ user.telefono }}</p>
+        <span class="role-pill">{{ user.role === 'ROLE_ADMIN' ? 'Administrador' : 'Usuario' }}</span>
+      </div>
+      <div class="profile-actions">
+        <button class="btn btn-outline-secondary rounded-pill" type="button" (click)="startEdit()">Editar perfil</button>
+        <a class="btn btn-outline-success rounded-pill" *ngIf="user.role !== 'ROLE_ADMIN'" routerLink="/solicitudes">Mis solicitudes</a>
+        <a class="btn btn-outline-success rounded-pill" *ngIf="user.role !== 'ROLE_ADMIN'" routerLink="/entregar-mascota">Entregar mascota</a>
+        <a class="btn btn-success rounded-pill" *ngIf="user.role === 'ROLE_ADMIN'" routerLink="/admin">Dashboard admin</a>
+        <a class="btn btn-success rounded-pill" routerLink="/mascotas">Ver mascotas</a>
+      </div>
+    </div>
+
+    <form class="profile-edit mt-4" *ngIf="editing" [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Nombre</label>
+          <input class="form-control" formControlName="nombre">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Apellido</label>
+          <input class="form-control" formControlName="apellido">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Teléfono</label>
+          <input class="form-control" formControlName="telefono">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Foto perfil</label>
+          <div class="profile-upload-preview" *ngIf="profilePreviewUrl">
+            <img [src]="profilePreviewUrl" alt="Vista previa foto perfil">
+            <span>Vista previa</span>
+          </div>
+          <input type="file" class="form-control" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" (change)="onProfileImageSelected($event)">
+          <div class="progress mt-2" *ngIf="uploading">
+            <div class="progress-bar bg-success" [style.width.%]="uploadProgress">{{ uploadProgress }}%</div>
+          </div>
+          <small class="upload-ok" *ngIf="profileForm.controls.fotoPerfil.value && !uploading">Foto cargada correctamente</small>
+        </div>
+        <div class="col-12 d-flex gap-2 justify-content-end">
+          <button class="btn btn-outline-secondary rounded-pill px-4" type="button" (click)="cancelEdit()">Cancelar</button>
+          <button class="btn btn-success rounded-pill px-4" [disabled]="saving || uploading">
+            <span *ngIf="!saving">Guardar</span>
+            <span *ngIf="saving" class="spinner-border spinner-border-sm"></span>
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <app-loading-spinner *ngIf="loading"></app-loading-spinner>
+
+    <div class="row g-4 mt-3" *ngIf="!loading">
+      <div class="col-lg-6">
+        <div class="profile-section">
+          <h3>Solicitudes de adopción</h3>
+          <div class="profile-item" *ngFor="let solicitud of solicitudesAdopcion">
+            <div>
+              <strong>{{ solicitud.mascota.nombre }}</strong>
+              <span>{{ solicitud.mensaje }}</span>
+            </div>
+            <em [ngClass]="solicitud.estado.toLowerCase()">{{ solicitud.estado | estadoSolicitud }}</em>
+          </div>
+          <p class="empty-mini" *ngIf="!solicitudesAdopcion.length">No tienes solicitudes de adopción.</p>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="profile-section">
+          <h3>Mascotas publicadas / solicitudes refugio</h3>
+          <div class="profile-item with-image" *ngFor="let solicitud of solicitudesIngreso">
+            <img *ngIf="solicitud.imagenUrl" [src]="solicitud.imagenUrl" [alt]="solicitud.nombreMascota">
+            <div>
+              <strong>{{ solicitud.nombreMascota }}</strong>
+              <span>{{ solicitud.raza }} · {{ solicitud | edadMascota }} · {{ labelTamano(solicitud.tamano) }} · {{ solicitud.refugioNombre }}</span>
+            </div>
+            <em [ngClass]="solicitud.estadoSolicitud.toLowerCase()">{{ solicitud.estadoSolicitud | estadoSolicitud }}</em>
+          </div>
+          <p class="empty-mini" *ngIf="!solicitudesIngreso.length">No has enviado mascotas a refugio.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

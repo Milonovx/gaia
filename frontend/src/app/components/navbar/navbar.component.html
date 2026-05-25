@@ -1,0 +1,65 @@
+<nav class="navbar navbar-expand-lg fixed-top gaia-navbar">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center gap-2" routerLink="/">
+      <span class="brand-mark"><fa-icon icon="paw"></fa-icon></span>
+      <span>GAIA</span>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#gaiaNavbar">
+      <fa-icon icon="bars"></fa-icon>
+    </button>
+
+    <div class="collapse navbar-collapse" id="gaiaNavbar">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Inicio</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/mascotas" routerLinkActive="active">Mascotas</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/refugios" routerLinkActive="active">Refugios</a>
+        </li>
+
+        <ng-container *ngIf="isAuthenticated$ | async; else guestLinks">
+          <ng-container *ngIf="currentUser$ | async as user">
+          <li class="nav-item" *ngIf="!(isAdmin$ | async)">
+            <a class="nav-link" routerLink="/solicitudes" routerLinkActive="active">Mis Solicitudes</a>
+          </li>
+          <li class="nav-item" *ngIf="!(isAdmin$ | async)">
+            <a class="nav-link" routerLink="/entregar-mascota" routerLinkActive="active">Entregar Mascota</a>
+          </li>
+          <li class="nav-item" *ngIf="isAdmin$ | async">
+            <a class="nav-link admin-link" routerLink="/admin" routerLinkActive="active">
+              <fa-icon icon="chart-line"></fa-icon>
+              Dashboard Admin
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/perfil" routerLinkActive="active">
+              <fa-icon icon="user"></fa-icon>
+              Perfil
+              <span class="user-name">{{ user.nombre }}</span>
+            </a>
+          </li>
+          <li class="nav-item ms-lg-2">
+            <button type="button" class="btn btn-outline-success btn-sm rounded-pill px-3" (click)="logout()">
+              <fa-icon icon="sign-out-alt"></fa-icon>
+              Logout
+            </button>
+          </li>
+          </ng-container>
+        </ng-container>
+
+        <ng-template #guestLinks>
+          <li class="nav-item ms-lg-2">
+            <a class="btn btn-outline-success btn-sm rounded-pill px-3" routerLink="/login">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-success btn-sm rounded-pill px-3" routerLink="/registro">Registro</a>
+          </li>
+        </ng-template>
+      </ul>
+    </div>
+  </div>
+</nav>

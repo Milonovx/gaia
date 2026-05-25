@@ -529,18 +529,6 @@ Respuesta:
 3. Gestiona mascotas, refugios, usuarios y solicitudes.
 4. Las operaciones se confirman visualmente y recargan datos.
 
-## Capturas y Evidencias
-
-Agregar capturas en esta sección:
-
-```text
-docs/screenshots/login.png
-docs/screenshots/dashboard-admin.png
-docs/screenshots/mascotas.png
-docs/screenshots/refugios-mapa.png
-docs/screenshots/perfil.png
-```
-
 ## Solución de Problemas
 
 ### PowerShell no ejecuta npm
@@ -635,10 +623,10 @@ Los componentes usan `finalize()` y `catchError()` en operaciones HTTP para aseg
 
 ## Licencia
 
-Proyecto académico. Definir licencia institucional antes de distribución pública.
+Proyecto académico. Universidad Surcolombiana.
 
 ## Créditos
 
-Autor: Proyecto académico GAIA  
+Autor: Andres Camilo Reina Diaz 
 Ciudad: Neiva, Huila, Colombia  
 Área: Ingeniería de Software, Arquitectura Full Stack y Desarrollo Web Empresarial
